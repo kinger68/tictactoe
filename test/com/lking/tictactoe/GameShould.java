@@ -19,9 +19,18 @@ public class GameShould {
     }
 
     @Test
-    void wait_for_y_to_play_second() {
+    void wait_for_o_to_play_after_x() {
         var game = new Game();
-        game.play();
+        game = game.play();
         assertThat(game.state(),equalTo(new GameState(GAME_ON, O)));
+    }
+
+    @Test
+    void alternate_the_players() {
+        var game = new Game();
+        game = game.play();
+        game = game.play();
+
+        assertThat(game.state(),equalTo(new GameState(GAME_ON, X)));
     }
 }
