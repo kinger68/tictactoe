@@ -8,7 +8,7 @@ public class Game {
     private final Player currentPlayer;
 
     public Game() {
-        currentPlayer = X;
+        currentPlayer =  null;
     }
 
     private Game(Player currentPlayer) {
@@ -16,12 +16,19 @@ public class Game {
     }
 
     public GameState state() {
-        return new GameState(GAME_ON, currentPlayer);
+        return new GameState(GAME_ON, nextPlayer());
+    }
+
+    private Player nextPlayer() {
+        if (currentPlayer == null)
+            return X;
+        else
+            return currentPlayer == X ? O : X;
     }
 
     // Return a Game object as for functional programming, this has us not modifying
     // the state of the Game object that called this.
     public Game play() {
-        return new Game(O);
+        return new Game(nextPlayer());
     }
 }
