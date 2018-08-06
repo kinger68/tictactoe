@@ -1,5 +1,5 @@
 package com.lking.tictactoe;
 
 public enum Status {
-    GAME_ON
+    SQUARE_TAKEN, DRAW, GAME_ON
 }

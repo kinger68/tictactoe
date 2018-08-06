@@ -3,20 +3,36 @@ package com.lking.tictactoe;
 import static com.lking.tictactoe.Player.O;
 import static com.lking.tictactoe.Player.X;
 import static com.lking.tictactoe.Status.GAME_ON;
+import static com.lking.tictactoe.Status.SQUARE_TAKEN;
 
 public class Game {
     private final Player currentPlayer;
+    private Board board;
+    private Status status;
 
     public Game() {
-        currentPlayer =  null;
+        board = new Board();
+        status = GAME_ON;
+        currentPlayer = X;
+    }
+
+    private Game(Board board, Player currentPlayer) {
+        this.board = board;
+        this.currentPlayer = currentPlayer;
     }
 
     private Game(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
 
+    private Game(Status status, Board board, Player currentPlayer) {
+        this.status = status;
+        this.board = board;
+        this.currentPlayer = currentPlayer;
+    }
+
     public GameState state() {
-        return new GameState(GAME_ON, nextPlayer());
+        return new GameState(status, currentPlayer);
     }
 
     private Player nextPlayer() {
@@ -28,7 +44,12 @@ public class Game {
 
     // Return a Game object as for functional programming, this has us not modifying
     // the state of the Game object that called this.
-    public Game play() {
-        return new Game(nextPlayer());
+    public Game play(Square play) {
+        if (board.alreadyTaken(play)) {
+            return new Game(SQUARE_TAKEN, board, currentPlayer);
+        }
+        else {
+            return new Game(GAME_ON, board.take(play), nextPlayer());
+        }
     }
 }
