@@ -1,7 +1,9 @@
 package com.lking.tictactoe;
 
+import static com.lking.tictactoe.Player.NOBODY;
 import static com.lking.tictactoe.Player.O;
 import static com.lking.tictactoe.Player.X;
+import static com.lking.tictactoe.Status.DRAW;
 import static com.lking.tictactoe.Status.GAME_ON;
 import static com.lking.tictactoe.Status.SQUARE_TAKEN;
 
@@ -13,7 +15,7 @@ public class Game {
     public Game() {
         board = new Board();
         status = GAME_ON;
-        currentPlayer = X;
+        currentPlayer = null;
     }
 
     private Game(Board board, Player currentPlayer) {
@@ -26,17 +28,27 @@ public class Game {
     }
 
     private Game(Status status, Board board, Player currentPlayer) {
-        this.status = status;
         this.board = board;
         this.currentPlayer = currentPlayer;
+        if (board.isFull()) {
+            this.status = DRAW;
+        }
+        else {
+            this.status = status;
+        }
     }
 
     public GameState state() {
-        return new GameState(status, currentPlayer);
+        if (status == DRAW) {
+            return new GameState(status, NOBODY);
+        }
+        else {
+            return new GameState(status, nextPlayer());
+        }
     }
 
     private Player nextPlayer() {
-        if (currentPlayer == null)
+        if (currentPlayer == null || currentPlayer == NOBODY)
             return X;
         else
             return currentPlayer == X ? O : X;
@@ -47,8 +59,8 @@ public class Game {
     public Game play(Square play) {
         if (board.alreadyTaken(play)) {
             return new Game(SQUARE_TAKEN, board, currentPlayer);
-        }
-        else {
+        } else {
+            // Play the square
             return new Game(GAME_ON, board.take(play), nextPlayer());
         }
     }

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static com.lking.tictactoe.Player.NONE;
+import static com.lking.tictactoe.Player.NOBODY;
 import static com.lking.tictactoe.Player.X;
 import static com.lking.tictactoe.Status.DRAW;
 import static com.lking.tictactoe.Status.GAME_ON;
@@ -45,9 +45,9 @@ public class GameShould {
     // X X O
     // O X O
     @Test
-    void detect_when_there_is_a_draw() {
+    void recognize_a_draw() {
         var game = play(drawPlays);
-        assertThat(game.state(),equalTo(new GameState(DRAW, NONE)));
+        assertThat(game.state(),equalTo(new GameState(DRAW, NOBODY)));
     }
 
     private Game play(Square... squares) {

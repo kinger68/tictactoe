@@ -23,4 +23,8 @@ public class Board {
         newBoard.add(toPlay);
         return new Board(newBoard);
     }
+
+    public boolean isFull() {
+        return takenSquares.size() == 9;
+    }
 }
