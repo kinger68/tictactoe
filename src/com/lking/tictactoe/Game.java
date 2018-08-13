@@ -3,9 +3,7 @@ package com.lking.tictactoe;
 import static com.lking.tictactoe.Player.NOBODY;
 import static com.lking.tictactoe.Player.O;
 import static com.lking.tictactoe.Player.X;
-import static com.lking.tictactoe.Status.DRAW;
-import static com.lking.tictactoe.Status.GAME_ON;
-import static com.lking.tictactoe.Status.SQUARE_TAKEN;
+import static com.lking.tictactoe.Status.*;
 
 public class Game {
     private final Player currentPlayer;
@@ -30,7 +28,11 @@ public class Game {
     private Game(Status status, Board board, Player currentPlayer) {
         this.board = board;
         this.currentPlayer = currentPlayer;
-        if (board.isFull()) {
+
+        if (board.hasWon(currentPlayer)) {
+            this.status = currentPlayer == X ? X_WINS : O_WINS;
+        }
+        else if (board.isFull()) {
             this.status = DRAW;
         }
         else {
@@ -39,7 +41,7 @@ public class Game {
     }
 
     public GameState state() {
-        if (status == DRAW) {
+        if (status == DRAW || status == X_WINS || status == O_WINS) {
             return new GameState(status, NOBODY);
         }
         else {
@@ -61,7 +63,7 @@ public class Game {
             return new Game(SQUARE_TAKEN, board, currentPlayer);
         } else {
             // Play the square
-            return new Game(GAME_ON, board.take(play), nextPlayer());
+            return new Game(GAME_ON, board.take(play, nextPlayer()), nextPlayer());
         }
     }
 }

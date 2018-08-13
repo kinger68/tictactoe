@@ -1,27 +1,30 @@
 package com.lking.tictactoe;
 
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Board {
-    private Set<Square> takenSquares = null;
+    private Map<Square, Player> takenSquares = null;
 
     public Board() {
-        takenSquares = new HashSet<>();
+        takenSquares = new HashMap<>();
     }
 
-    private Board(Set<Square> takenSquares) {
+    private Board(Map<Square, Player> takenSquares) {
         this.takenSquares = takenSquares;
     }
 
     public boolean alreadyTaken(Square square) {
-        return takenSquares.contains(square);
+        return takenSquares.keySet().contains(square);
     }
 
-    public Board take(Square toPlay) {
-        var newBoard = new HashSet<Square>(takenSquares);
-        newBoard.add(toPlay);
+    public Board take(Square toPlay, Player player) {
+        var newBoard = new HashMap<Square, Player>(takenSquares);
+        newBoard.put(toPlay, player);
         return new Board(newBoard);
     }
 
@@ -29,7 +32,9 @@ public class Board {
         return takenSquares.size() == 9;
     }
 
-    public boolean hasWon() {
+    // A game is won if all the squares in a particular pattern are taken by the
+    // same player
+    public boolean hasWon(Player player) {
         var winningCombos = Stream.of(
                 Stream.of(Square.TOP_LEFT, Square.TOP_CENTER, Square.TOP_RIGHT),
                 Stream.of(Square.MID_LEFT, Square.MID_CENTER, Square.MID_RIGHT),
@@ -40,6 +45,20 @@ public class Board {
                 Stream.of(Square.TOP_LEFT, Square.MID_CENTER, Square.BOTTOM_RIGHT),
                 Stream.of(Square.BOTTOM_LEFT, Square.MID_CENTER, Square.TOP_RIGHT)
         );
-        return winningCombos.anyMatch(combo -> combo.allMatch(square -> takenSquares.contains(square)));
+        return winningCombos.anyMatch(combo -> combo.allMatch(squaresTakenBy(player)::contains));
+    }
+
+    // Find all the squares taken by the 'player' argument
+    private Set<Square> squaresTakenBy(Player player) {
+        return takenSquares.entrySet().stream()
+                .filter(entry -> entry.getValue() == player)
+                .map(entry -> entry.getKey())
+                .collect(Collectors.toSet());
+    }
+
+    @Override
+    public String toString() {
+        String printBoard = "Foo";
+        return printBoard;
     }
 }
