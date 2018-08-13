@@ -41,7 +41,7 @@ public class Game {
     }
 
     public GameState state() {
-        if (status == DRAW || status == X_WINS || status == O_WINS) {
+        if (gameIsOver()) {
             return new GameState(status, NOBODY);
         }
         else {
@@ -49,21 +49,29 @@ public class Game {
         }
     }
 
-    private Player nextPlayer() {
-        if (currentPlayer == null || currentPlayer == NOBODY)
-            return X;
-        else
-            return currentPlayer == X ? O : X;
-    }
-
     // Return a Game object as for functional programming, this has us not modifying
+
     // the state of the Game object that called this.
     public Game play(Square play) {
+        if (gameIsOver()) {
+            return this;
+        }
         if (board.alreadyTaken(play)) {
             return new Game(SQUARE_TAKEN, board, currentPlayer);
         } else {
             // Play the square
             return new Game(GAME_ON, board.take(play, nextPlayer()), nextPlayer());
         }
+    }
+
+    private boolean gameIsOver() {
+        return status == DRAW || status == X_WINS || status == O_WINS;
+    }
+
+    private Player nextPlayer() {
+        if (currentPlayer == null || currentPlayer == NOBODY)
+            return X;
+        else
+            return currentPlayer == X ? O : X;
     }
 }

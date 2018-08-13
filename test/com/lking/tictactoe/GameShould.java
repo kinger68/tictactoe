@@ -84,15 +84,12 @@ public class GameShould {
         assertThat(game.state(),equalTo(new GameState(X_WINS, NOBODY)));
     }
 
-    // X O X
-    // X O X
-    // O O X
     @Test
-    void recognize_o_win_on_last_move() {
+    void not_permit_a_play_after_game_is_won() {
         var game = play(TOP_LEFT, TOP_CENTER, MID_LEFT,
-                        MID_CENTER, TOP_RIGHT, BOTTOM_LEFT,
-                        BOTTOM_RIGHT, BOTTOM_CENTER);
-        assertThat(game.state(),equalTo(new GameState(O_WINS, NOBODY)));
+                        MID_CENTER, BOTTOM_LEFT, BOTTOM_CENTER);
+
+        assertThat(game.state(),equalTo(new GameState(X_WINS, NOBODY)));
     }
 
     private Game play(Square... squares) {
